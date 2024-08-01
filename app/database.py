@@ -1,12 +1,17 @@
-import aioredis
+from motor.motor_asyncio import AsyncIOMotorClient
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.orm import sessionmaker
+from pymongo import MongoClient
+from redis.asyncio import Redis
 
-redis = aioredis.from_url("redis://redis:6379", decode_responses=True)
+DATABASE_URL = "postgresql+asyncpg://user:password@postgres/testdb"
+MONGO_URL = "mongodb://mongo:27017"
+REDIS_URL = "redis://redis:6379"
 
-async def cache_get(key):
-    return await redis.get(key)
+engine = create_async_engine(DATABASE_URL, echo=True)
+SessionLocal = sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)
 
-async def cache_set(key, value):
-    await redis.set(key, value)
+mongo_client = AsyncIOMotorClient(MONGO_URL)
+mongo_db = mongo_client.testdb
 
-async def cache_delete(key):
-    await redis.delete(key)
+redis = Redis.from_url(REDIS_URL, decode_responses=True)

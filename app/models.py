@@ -1,6 +1,5 @@
 from pydantic import BaseModel
 
 class Message(BaseModel):
-    id: str
-    username: str
+    author: str
     content: str

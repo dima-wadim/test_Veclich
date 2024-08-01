@@ -1,20 +1,21 @@
 from aiogram import Bot, Dispatcher, types
-from aiogram.types import Message
+from aiogram.types import ParseMode
+from aiogram.fsm.storage.memory import MemoryStorage
 
-bot = Bot(token='YOUR_TELEGRAM_BOT_TOKEN')
-dp = Dispatcher()
+bot = Bot(token="YOUR_TELEGRAM_BOT_TOKEN")
+dp = Dispatcher(storage=MemoryStorage())
 
-@dp.message(commands=["start"])
-async def start_command(message: Message):
-    await message.answer("Привет! Я ваш бот.")
+@dp.message_handler(commands=["start"])
+async def start(message: types.Message):
+    await message.answer("Welcome to test_Veclich bot!")
 
-@dp.message(commands=["messages"])
-async def list_messages(message: Message):
-    await message.answer("Здесь будут ваши сообщения.")
+@dp.message_handler(commands=["messages"])
+async def get_messages(message: types.Message):
+    # Логика получения сообщений из MongoDB
+    messages = [...]  # Пример данных
+    await message.answer(f"Messages: {messages}")
 
-async def on_startup(dispatcher):
-    # Логика инициализации бота
-    pass
-
-if __name__ == "__main__":
-    dp.start_polling(bot, on_startup=on_startup)
+@dp.message_handler(commands=["add_message"])
+async def add_message(message: types.Message):
+    # Логика добавления сообщения
+    await message.answer("Message added!")
