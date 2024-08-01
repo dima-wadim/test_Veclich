@@ -1,16 +1,12 @@
-import motor.motor_asyncio
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.orm import sessionmaker
+import aioredis
 
-mongo_client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://mongo:27017')
-db = mongo_client.test_database
+redis = aioredis.from_url("redis://redis:6379", decode_responses=True)
 
-DATABASE_URL = 'postgresql+asyncpg://user:password@postgres/mydatabase'
-engine = create_async_engine(DATABASE_URL, echo=True)
-async_session = sessionmaker(
-    bind=engine, class_=AsyncSession, expire_on_commit=False
-)
+async def cache_get(key):
+    return await redis.get(key)
 
-async def init_db():
-    # Инициализация базы данных
-    pass
+async def cache_set(key, value):
+    await redis.set(key, value)
+
+async def cache_delete(key):
+    await redis.delete(key)

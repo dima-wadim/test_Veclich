@@ -1,12 +1,5 @@
-from fastapi import APIRouter
-from .models import Message
-
-router = APIRouter()
-
 @router.get("/api/v1/messages/")
-async def get_messages():
-    return []
-
-@router.post("/api/v1/message/")
-async def create_message(message: Message):
-    return {"status": "success"}
+async def get_messages(skip: int = 0, limit: int = 10):
+    # Пример запроса к базе данных с пагинацией
+    messages = [...]  # Реализуйте логику для получения данных с использованием skip и limit
+    return messages
